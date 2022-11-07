@@ -1,0 +1,53 @@
+Lab 1
+
+a. ------
+
+1 & 2.
+Abscissa.cpp, in alltmera, row 247, an int (0) is sent to the anslutningspropp function, the function expects an int
+pointer. When the variable is then used inside of the anslutningspropp function the debugger
+shows a segmentation fault error. This is because the variable that is a pointer that now holds an adress that
+is 0x0, this adress we do not have access to, therefore we are trying to access forbidden memory. 
+
+3.
+To fix this i sent the adress of "krypta" to the anslutningspropp function instead. 
+
+This is a semantic analysis fault.
+
+b. ------
+
+25.c uses recursion to go thru the input in rest() with match() function. 
+
+4 & 5.
+29 is using a scanner being called by the parser to read the next character. There is also a symtable. 
+The scanner is lexer.c, which uses a for loop to go thru the text to find the first token. It is also able
+to recognize identifiers and add them to the symtable. Lexer is also able to filter the input, different actions
+depending of the type of character read. 
+
+The parser is dependant on the operators in the input to understand the priority of operations and format.
+
+6.
+Semantic analysis is not really needed here since all we are doing is changing the order of identifiers and
+operators. Everything past it is also not present since we have no in-between code. 
+
+7.
+in order for the program to be able to calculate the expressions, a function with a stack could be implemented that gets
+the output of the current program and is able to do an operation whenever an operator gets read.
+2,3,*,1,+,
+
+Whenever a number is read add it to the stack and when an operator is read, perform the operation with the 2
+latest entries in the stack. Works for 1,2,3,*,+ aswell. 
+
+c. ------
+
+8. 
+pre_processor_macro.c, does not work.
+
+9. 
+This is because pre-processor macros are expanded once or "replaced", and when FACTORIAL is expanded, it is done and
+now it looks for the definition of FACTORIAL egain but it is not found. 
+
+10.
+The pre-processor could have some sort of table where it saves the definitions of functions, having the ability
+to replace them multiple times. 
+
+

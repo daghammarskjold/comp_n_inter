@@ -1,0 +1,108 @@
+---------------part_a:---------------
+
+start -> list eof
+list -> assignment ; list
+       | expr ; list 
+       | empty
+assignment -> id { print(id.lexeme) } = expr { print('=') }
+expr -> term moreterms
+moreterms -> + term { print('+') } moreterms
+       | - term { print('-') } moreterms
+       | empty
+term -> factor morefactors
+morefactors -> * factor { print('*') } morefactors
+       | / factor { print('/') } morefactors
+       | div factor { print('DIV') } morefactors
+       | mod factor { print('MOD') } morefactors
+       | empty
+factor -> ( expr )
+       | id { print(id.lexeme) }
+       | num { print(num.value) }
+
+
+
+Is it ambiguous? 
+       For the grammar to ba ambiguous, an input should be able to be represented with 2 derivation trees. 
+       We have made sure in the grammar that only right-recursion is possible, therefore we have eliminated 
+       the possibility of ambiguous grammar. 
+
+Is it left-recursive? 
+    Left recursion has been eliminated, list is right-recursive aswell as expr.
+
+Are FIRST sets disjoint?
+    FIRST(factor) = {"(",id,num}
+    FIRST(morefactors) = {*, /, div, mod}
+    FIRST(term) = {id, num}
+    FIRST(moreterms) = {+, -}
+    FIRST(expr) = {id, num}
+    FIRST(assignment) = {id}
+    FIRST(list) = {id}
+    FIRST(start) = {id, num}
+
+    These sets are not disjoint, num and id is present in many of them. Recursice-descent parser cannot be
+    written
+
+---------------part_b:---------------
+
+       Added assignment() and "=" in emitter. 
+
+---------------part_c---------------
+
+Table: 
+foo = 3;
+
+ lexeme   |  token_type  |  value 
+ (Char*)  |    (int)     |  (int)
+-----------------------------------
+ div      |      257     |    0
+ MOD      |      258     |    0
+ foo      |      259     |    3
+
+
+
+Stack:
+foo = 3;
+
+val   |    type 
+----------------
+2     |     259        
+3     |     256
+
+
+A stack was created in emitter.c. 
+* stack[x][0] - the value
+       Value is either the actual value of the integer or the place of the variable in the sym table.     
+* stack[x][1] - the type
+       Either ID or NUM.
+
+The head variable moves forward after each append and backwards after each pop. The head is always at the 
+latest entry in the stack. After each finished assignment the head is reset to -1. 
+
+Because of the pop moving back the head, after 2 pops we can just append the aswer and that will put the new
+int at the correct place. 
+
+
+---------------part_d:---------------
+
+start -> list eof
+list -> assignment ; list
+       | expr ; list 
+       | empty
+assignment -> id { print(id.lexeme) } = expr { print('=') }
+expr -> term moreterms
+moreterms -> + term { print('+') } moreterms
+       | - term { print('-') } moreterms
+       | empty
+term -> factor morefactors
+morefactors -> * factor { print('*') } morefactors
+       | / factor { print('/') } morefactors
+       | div factor { print('DIV') } morefactors
+       | mod factor { print('MOD') } morefactors
+       | empty
+factor -> exparg moreexpargs
+moreexpargs -> ^ exparg { print('^') } moreexpargs
+       | empty
+exparg -> ( expr )
+       | id { print(id.lexeme) }
+       | num { print(num.value) }
+
